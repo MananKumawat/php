@@ -19,7 +19,7 @@ class TasksController extends Controller
     {
         $task = new Task();
         $task->deleteById($id);
-        return response("Deleted task with ". $id . " successfully");
+        return response("Deleted the task ". $id . " successfully");
     }
 
     function get()
@@ -27,5 +27,13 @@ class TasksController extends Controller
         $task = new Task();
         $rows = $task->getAll();
         return response()->json($rows);
+    }
+
+    function update($id, Request $request)
+    {
+        $state = $request['state'];
+        $task = new Task();
+        $task->updateStateById($id, $state);
+        return response("Updated the task ". $id . " successfully");
     }
 }

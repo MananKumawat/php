@@ -22,4 +22,9 @@ class Task extends Model
     function getAll(){
         return DB::table('tasks')->select('id', 'description', 'state')->get();
     }
+
+    function updateStateById($id, $state)
+    {
+        DB::table('tasks')->where('id', $id)->update(['state' => $state]);
+    }
 }
