@@ -4,36 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Services\TaskService;
 
 class TasksController extends Controller
 {
     function create(Request $request)
     {
-        $description = $request['description'];
-        $task = new Task();
-        $row = $task->create($description);
+        $service = new TaskService();
+        $row = $service->create($request);
         return response()->json($row);
     }
 
     function delete($id)
     {
-        $task = new Task();
-        $task->deleteById($id);
+        $service = new TaskService();
+        $service->delete($id);
         return response("Deleted the task ". $id . " successfully");
     }
 
     function get()
     {
-        $task = new Task();
-        $rows = $task->getAll();
+        $service = new TaskService();
+        $rows = $service->get();
         return response()->json($rows);
     }
 
     function update($id, Request $request)
     {
-        $state = $request['state'];
-        $task = new Task();
-        $task->updateStateById($id, $state);
+        $service = new TaskService();
+        $service->update($id, $request);
         return response("Updated the task ". $id . " successfully");
     }
 }
