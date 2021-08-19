@@ -14,4 +14,11 @@ class TasksController extends Controller
         $row = $task->create($description);
         return response()->json($row);
     }
+
+    function delete($id)
+    {
+        $task = new Task();
+        $task->deleteById($id);
+        return response("Deleted task with ". $id . " successfully");
+    }
 }

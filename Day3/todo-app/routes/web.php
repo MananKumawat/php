@@ -19,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::post('/tasks', [TasksController::class, 'create']);
+
+Route::delete('/tasks/{id}', [TasksController::class, 'delete']);
