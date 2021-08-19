@@ -19,4 +19,7 @@ class Task extends Model
         DB::table('tasks')->where('id', '=', $id)->delete();
     }
 
+    function getAll(){
+        return DB::table('tasks')->select('id', 'description', 'state')->get();
+    }
 }

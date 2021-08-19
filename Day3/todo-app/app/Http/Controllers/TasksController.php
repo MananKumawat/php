@@ -21,4 +21,11 @@ class TasksController extends Controller
         $task->deleteById($id);
         return response("Deleted task with ". $id . " successfully");
     }
+
+    function get()
+    {
+        $task = new Task();
+        $rows = $task->getAll();
+        return response()->json($rows);
+    }
 }
