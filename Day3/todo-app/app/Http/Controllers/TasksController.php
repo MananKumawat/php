@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
 
 class TasksController extends Controller
 {
+    private $service;
+
+    function __construct(){
+        $this->service = new TaskService();
+    }
+
     function isAssoc(array $arr)
     {
         if (array() === $arr) return false;
@@ -16,9 +23,7 @@ class TasksController extends Controller
 
     function create(Request $request)
     {
-        $service = new TaskService();
-
-        $row = $service->create($request);
+        $row = $this->service->create($request);
 
         if ($this->isAssoc($row))
             return response($row);
@@ -30,9 +35,7 @@ class TasksController extends Controller
 
     function delete($id)
     {
-        $service = new TaskService();
-
-        $success = $service->delete($id);
+        $success = $this->service->delete($id);
 
         if ($success) {
             return response()->json([ "Deleted the task ". $id . " successfully" ]);
@@ -45,9 +48,7 @@ class TasksController extends Controller
 
     function get($id='')
     {
-        $service = new TaskService();
-
-        $rows = $service->get($id);
+        $rows = $this->service->get($id);
 
         if ($rows == array() && $id != '')
             return response()->json([ "error" => "Failed to get the task ". $id . ". Enter valid task id"], 400);
@@ -55,18 +56,20 @@ class TasksController extends Controller
             return response()->json($rows);
     }
 
-    function update($id)
+    function update($id, Request $request)
     {
-        $service = new TaskService();
+        $success = $this->service->update($id, $request);
 
-        $success = $service->update($id);
-
-        if ($success) {
+        if ($success == 1) {
             return response()->json([ "Updated the task ". $id . " successfully" ]);
         }
 
-        else {
+        else if ($success == 0) {
             return response()->json([ "error" => "Failed to update the task ". $id . ". Enter valid task id"], 400);
+        }
+
+        else {
+            return response()->json([ "error" => "Failed to update the task ". $id . ". Enter state " . $success], 400);
         }
     }
 }

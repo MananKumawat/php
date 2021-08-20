@@ -73,7 +73,7 @@ class TaskTest extends TestCase
 
         $id = $response->json()['id'];
 
-        $response = $this->patch('/tasks/' . $id);
+        $response = $this->patch('/tasks/' . $id, ['state' => 'In Progress']);
 
         $response->assertStatus(200);
 
@@ -89,7 +89,7 @@ class TaskTest extends TestCase
             'state' => 'In Progress',
         ]);
 
-        $response = $this->patch('/tasks/' . $id);
+        $response = $this->patch('/tasks/' . $id, ['state' => 'Done']);
 
         $response->assertStatus(200);
 
@@ -108,7 +108,7 @@ class TaskTest extends TestCase
 
     public function testUpdateTaskFail()
     {
-        $response = $this->patch('/tasks/' . 1000);
+        $response = $this->patch('/tasks/' . 1000, ['state' => 'Done']);
 
         $response->assertStatus(400);
 

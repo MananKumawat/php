@@ -10,13 +10,20 @@ use Illuminate\Http\Request;
 
 class TaskService
 {
+    private $logger;
+    private $task;
+
+    function __construct()
+    {
+        $this->logger = new Logger();
+        $this->task = new Task();
+    }
+
     function create(Request $request)
     {
         $description = $request['description'];
 
-        $logger = new Logger();
-
-        $logger->create($description);
+        $this->logger->create($description);
 
         $validator = Validator::make($request->all(), [
             'description' => 'required|min:2|max:255'
@@ -26,51 +33,44 @@ class TaskService
             return $validator->errors()->all();
         }
 
-        $task = new Task();
-
-        return $task->create($description);
+        return $this->task->create($description);
     }
 
     function delete($id)
     {
-        $logger = new Logger();
+        $this->logger->delete($id);
 
-        $logger->delete($id);
-
-        $task = new Task();
-
-        return $task->deleteById($id);
+        return $this->task->deleteById($id);
     }
 
     function get($id)
     {
-        $logger = new Logger();
-
-        $logger->get();
-
-        $task = new Task();
+        $this->logger->get();
 
         if ($id=='')
-            return $task->getAll();
+            return $this->task->getAll();
 
         else
-            return $task->getById($id);
+            return $this->task->getById($id);
     }
 
-    function update($id)
+    function update($id, $request)
     {
-        $logger = new Logger();
+        $this->logger->update($id);
 
-        $logger->update($id);
+        $state = $request['state'];
 
-        $state = 'Done';
+        $prevState = $this->task->getStatusById($id);
 
-        $task = new Task();
+        if ($prevState == 'Pending' && $state != 'In Progress')
+            return 'In Progress';
 
-        $prevState = $task->getStatusById($id);
+        if ($prevState == 'In Progress' && $state != 'Done')
+            return 'Done';
 
-        if ($prevState == 'Pending') $state = 'In Progress';
+        if ($prevState == 'Done' && $state != 'Done')
+            return 'Done';
 
-        return $task->updateStateById($id, $state);
+        return $this->task->updateStateById($id, $state);
     }
 }
