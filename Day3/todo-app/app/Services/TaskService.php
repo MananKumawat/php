@@ -15,6 +15,7 @@ class TaskService
         $description = $request['description'];
 
         $logger = new Logger();
+
         $logger->create($description);
 
         $validator = Validator::make($request->all(), [
@@ -26,36 +27,50 @@ class TaskService
         }
 
         $task = new Task();
+
         return $task->create($description);
     }
 
     function delete($id)
     {
         $logger = new Logger();
+
         $logger->delete($id);
 
         $task = new Task();
+
         return $task->deleteById($id);
     }
 
-    function get()
+    function get($id)
     {
         $logger = new Logger();
+
         $logger->get();
 
         $task = new Task();
-        return $task->getAll();
+
+        if ($id=='')
+            return $task->getAll();
+
+        else
+            return $task->getById($id);
     }
 
     function update($id)
     {
         $logger = new Logger();
+
         $logger->update($id);
 
         $state = 'Done';
+
         $task = new Task();
+
         $prevState = $task->getStatusById($id);
+
         if ($prevState == 'Pending') $state = 'In Progress';
+
         return $task->updateStateById($id, $state);
     }
 }

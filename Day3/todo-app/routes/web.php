@@ -24,4 +24,6 @@ Route::delete('/tasks/{id}', [TasksController::class, 'delete']);
 
 Route::get('/tasks', [TasksController::class, 'get']);
 
+Route::get('/tasks/{id}', [TasksController::class, 'get']);
+
 Route::patch('/tasks/{id}', [TasksController::class, 'update']);

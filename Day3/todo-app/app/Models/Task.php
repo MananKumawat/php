@@ -12,7 +12,9 @@ class Task extends Model
     function create($description)
     {
         $values = array('id' => 0, 'description' => $description, 'state' => 'Pending');
+
         $values['id'] = DB::table('tasks')->insertGetId($values);
+
         return $values;
     }
 
