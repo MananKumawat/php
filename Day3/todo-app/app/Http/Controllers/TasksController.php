@@ -7,13 +7,21 @@ use App\Services\TaskService;
 
 class TasksController extends Controller
 {
+    function isAssoc(array $arr)
+    {
+        if (array() === $arr) return false;
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
     function create(Request $request)
     {
         $service = new TaskService();
         $row = $service->create($request);
-        if (!is_array($row))
-            return response($row, 400);
-        return response()->json($row);
+        if ($this->isAssoc($row))
+            return response($row);
+        else
+            return response()->json([ "error" => $row], 400);
+
     }
 
     function delete($id)
@@ -23,7 +31,7 @@ class TasksController extends Controller
         if ($success) {
             return response("Deleted the task ". $id . " successfully");
         } else {
-            return response("Failed to delete the task ". $id);
+            return response()->json([ "error" => "Failed to delete the task ". $id . ". Enter valid task id"], 400);
         }
     }
 
@@ -41,7 +49,7 @@ class TasksController extends Controller
         if ($success) {
             return response("Updated the task ". $id . " successfully");
         } else {
-            return response("Failed to update the task ". $id);
+            return response()->json([ "error" => "Failed to update the task ". $id . ". Enter valid task id"], 400);
         }
     }
 }
