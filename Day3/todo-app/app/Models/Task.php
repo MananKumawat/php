@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 
 class Task extends Model
 {
@@ -16,19 +18,26 @@ class Task extends Model
 
     function deleteById($id)
     {
-        DB::table('tasks')->where('id', '=', $id)->delete();
+        return DB::table('tasks')->where('id', '=', $id)->delete();
     }
 
-    function getAll(){
+    function getAll()
+    {
         return DB::table('tasks')->select('id', 'description', 'state')->get();
     }
 
-    function getStatusById($id){
+    function getById($id)
+    {
+        return DB::table('tasks')->where('id', $id)->first();
+    }
+
+    function getStatusById($id)
+    {
         return DB::table('tasks')->where('id', $id)->value('state');
     }
 
     function updateStateById($id, $state)
     {
-        DB::table('tasks')->where('id', $id)->update(['state' => $state]);
+        return DB::table('tasks')->where('id', $id)->update(['state' => $state]);
     }
 }

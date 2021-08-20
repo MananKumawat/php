@@ -11,16 +11,20 @@ class TasksController extends Controller
     {
         $service = new TaskService();
         $row = $service->create($request);
-        if ($row == 'fail')
-            return response("failed", 400);
+        if (!is_array($row))
+            return response($row, 400);
         return response()->json($row);
     }
 
     function delete($id)
     {
         $service = new TaskService();
-        $service->delete($id);
-        return response("Deleted the task ". $id . " successfully");
+        $success = $service->delete($id);
+        if ($success) {
+            return response("Deleted the task ". $id . " successfully");
+        } else {
+            return response("Failed to delete the task ". $id);
+        }
     }
 
     function get()
@@ -33,7 +37,11 @@ class TasksController extends Controller
     function update($id)
     {
         $service = new TaskService();
-        $service->update($id);
-        return response("Updated the task ". $id . " successfully");
+        $success = $service->update($id);
+        if ($success) {
+            return response("Updated the task ". $id . " successfully");
+        } else {
+            return response("Failed to update the task ". $id);
+        }
     }
 }

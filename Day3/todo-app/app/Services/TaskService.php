@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Logging\Logger;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class TaskService
         ]);
 
         if ($validator->fails()) {
-            return 'fail';
+            return $validator->errors()->all();
         }
 
         $task = new Task();
@@ -34,12 +35,11 @@ class TaskService
         $logger->delete($id);
 
         $task = new Task();
-        $task->deleteById($id);
+        return $task->deleteById($id);
     }
 
     function get()
     {
-
         $logger = new Logger();
         $logger->get();
 
@@ -56,6 +56,6 @@ class TaskService
         $task = new Task();
         $prevState = $task->getStatusById($id);
         if ($prevState == 'Pending') $state = 'In Progress';
-        $task->updateStateById($id, $state);
+        return $task->updateStateById($id, $state);
     }
 }
