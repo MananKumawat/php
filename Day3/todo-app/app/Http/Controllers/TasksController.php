@@ -49,7 +49,10 @@ class TasksController extends Controller
 
         $rows = $service->get($id);
 
-        return response()->json($rows);
+        if ($rows == array() && $id != '')
+            return response()->json([ "error" => "Failed to get the task ". $id . ". Enter valid task id"], 400);
+        else
+            return response()->json($rows);
     }
 
     function update($id)
