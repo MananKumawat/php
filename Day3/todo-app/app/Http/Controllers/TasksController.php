@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Task;
 use App\Services\TaskService;
 
 class TasksController extends Controller
@@ -12,6 +11,8 @@ class TasksController extends Controller
     {
         $service = new TaskService();
         $row = $service->create($request);
+        if ($row == 'fail')
+            return response("failed", 400);
         return response()->json($row);
     }
 
@@ -29,10 +30,10 @@ class TasksController extends Controller
         return response()->json($rows);
     }
 
-    function update($id, Request $request)
+    function update($id)
     {
         $service = new TaskService();
-        $service->update($id, $request);
+        $service->update($id);
         return response("Updated the task ". $id . " successfully");
     }
 }

@@ -9,7 +9,7 @@ class Task extends Model
 {
     function create($description)
     {
-        $values = array('id' => 0, 'description' => $description, 'state' => 'PENDING');
+        $values = array('id' => 0, 'description' => $description, 'state' => 'Pending');
         $values['id'] = DB::table('tasks')->insertGetId($values);
         return $values;
     }
@@ -21,6 +21,10 @@ class Task extends Model
 
     function getAll(){
         return DB::table('tasks')->select('id', 'description', 'state')->get();
+    }
+
+    function getStatusById($id){
+        return DB::table('tasks')->where('id', $id)->value('state');
     }
 
     function updateStateById($id, $state)
